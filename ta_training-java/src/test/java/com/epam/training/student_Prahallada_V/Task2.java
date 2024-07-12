@@ -1,38 +1,51 @@
 package com.epam.training.student_Prahallada_V;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.time.Duration;
 
-public class Task2 {
-    @Test
+public class Task2
+{
+    WebDriver d=new ChromeDriver();
 
-    public void Task2() {
+    @BeforeClass
 
-        System.setProperty("webdriver.geckodriver.driver","C:\\Users\\prahallada_v\\Downloads\\geckodriver.exe");
-        WebDriver driver= new FirefoxDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.get("https://www.pastebin.com");
+    public void launchingBrowser()
+    {
+        d.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        d.get("https://pastebin.com");
+        d.manage().window().maximize();
+    }
 
-        driver.findElement(By.id("postform-text")).sendKeys("git config --global user.name  \"New Sheriff in Town\"\n" +
-                "            git reset $(git commit-tree HEAD^{tree} -m \"Legacy code\")\n" +
-                "            git push origin master --force\n");
+    @Test(priority = 1)
+    public void steps() throws InterruptedException, AWTException
+    {
+        d.findElement(By.id("postform-text")).sendKeys("git config --global user.name  'New Sheriff in Town'\n" +
+                "            git reset $(git commit-tree HEAD^{tree} -m 'Legacy code')\n" +
+                "            git push origin master --force");
 
-        driver.findElement(By.xpath("(//span[@class='select2-selection__rendered'])[2]")).click();
 
-        Robot rb=null;
-        try{
-            rb = new Robot();
-        }catch (AWTException e ) {
-            throw new RuntimeException(e);
-        }
+        d.findElement(By.xpath("//span[@id='select2-postform-format-container']")).click();
+
+        Robot rb= new Robot();
+        rb.keyPress(KeyEvent.VK_DOWN);
+        rb.keyRelease(KeyEvent.VK_DOWN);
+
+        rb.keyPress(KeyEvent.VK_ENTER);
+        rb.keyRelease(KeyEvent.VK_ENTER);
+
+        d.findElement(By.xpath("//span[@id='select2-postform-expiration-container']")).click();
+        rb.keyPress(KeyEvent.VK_DOWN);
+        rb.keyRelease(KeyEvent.VK_DOWN);
 
         rb.keyPress(KeyEvent.VK_DOWN);
         rb.keyRelease(KeyEvent.VK_DOWN);
@@ -40,38 +53,48 @@ public class Task2 {
         rb.keyPress(KeyEvent.VK_ENTER);
         rb.keyRelease(KeyEvent.VK_ENTER);
 
+        d.findElement(By.id("postform-name")).sendKeys("how to gain dominance among developers");
+        
+        d.findElement(By.xpath("//button[text()='Create New Paste']")).click();
 
-        driver.findElement(By.xpath("(//span[@class='select2-selection__rendered'])[3]")).click();
+    }
 
-        Robot rb1=null;
-        try{
-            rb1 = new Robot();
-        }catch (AWTException e ) {
-            throw new RuntimeException(e);
-        }
+    @Test(priority = 2)
+    public void titleCheck()
+    {
+        String pageTitle = d.getTitle();
+        String expectedTitle = "how to gain dominance among developers";
+        Assert.assertFalse(pageTitle.contains(expectedTitle));
 
-        rb1.keyPress(KeyEvent.VK_DOWN);
-        rb1.keyRelease(KeyEvent.VK_DOWN);
+    }
 
-        rb1.keyPress(KeyEvent.VK_DOWN);
-        rb1.keyRelease(KeyEvent.VK_DOWN);
+    @Test(priority = 3)
+    public void syntaxCheck()
+    {
+        WebElement syntaxHighlightedCode = d.findElement(By.xpath("//span[@id='select2-postform-format-container']"));
+        String codeText = syntaxHighlightedCode.getText();
+        String expect="Bash";
+        assert codeText.equals(expect);
 
+    }
 
-        rb1.keyPress(KeyEvent.VK_ENTER);
-        rb1.keyRelease(KeyEvent.VK_ENTER);
+    @Test(priority = 4)
+    public void codeCheck()
+    {
+        String expectedPara = "git config --global user.name  'New Sheriff in Town'\n" +
+                "            git reset $(git commit-tree HEAD^{tree} -m 'Legacy code')\n" +
+                "            git push origin master --force";
 
+        String actualPara=d.findElement(By.id("postform-text")).getText();
+        Assert.assertEquals(actualPara,expectedPara);
+    }
 
+    @AfterClass
+    public void closeBrowser()
+    {
+        d.quit();
 
-        driver.findElement(By.id("postform-name")).sendKeys("how to gain dominance among developers");
-
-        driver.findElement(By.xpath("(//button[@type='submit'])[2]")).click();
-
-//         driver.findElement(By.xpath("(//button[@type='submit'])[2]")).sendKeys("how to gain dominance among developers", Keys.ENTER);
-//
-//        String expectedTitle="how to gain dominanace among developers - Google Search";
-//        String actualTitle=driver.getTitle();
-//        Assert.assertEquals(actualTitle,expectedTitle);
-        driver.quit();
-
+    }
+}
     }
 }
