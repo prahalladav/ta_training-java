@@ -1,10 +1,10 @@
 package com.epam.training.student_Prahallada_V;
 
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,6 +34,7 @@ public class Task2
                 "            git push origin master --force");
 
 
+      
         d.findElement(By.xpath("//span[@id='select2-postform-format-container']")).click();
 
         Robot rb= new Robot();
@@ -54,11 +55,10 @@ public class Task2
         rb.keyRelease(KeyEvent.VK_ENTER);
 
         d.findElement(By.id("postform-name")).sendKeys("how to gain dominance among developers");
-        
+
         d.findElement(By.xpath("//button[text()='Create New Paste']")).click();
 
     }
-
     @Test(priority = 2)
     public void titleCheck()
     {
@@ -67,7 +67,6 @@ public class Task2
         Assert.assertFalse(pageTitle.contains(expectedTitle));
 
     }
-
     @Test(priority = 3)
     public void syntaxCheck()
     {
@@ -77,7 +76,6 @@ public class Task2
         assert codeText.equals(expect);
 
     }
-
     @Test(priority = 4)
     public void codeCheck()
     {
@@ -87,6 +85,7 @@ public class Task2
 
         String actualPara=d.findElement(By.id("postform-text")).getText();
         Assert.assertEquals(actualPara,expectedPara);
+
     }
 
     @AfterClass
@@ -95,6 +94,5 @@ public class Task2
         d.quit();
 
     }
-}
-    }
+
 }
